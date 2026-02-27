@@ -2,92 +2,77 @@
 
 <head>
     <script>
-        const toggleButton = document.querySelector("#toggleList");
-        const listDiv = document.querySelector(".list");
+        function calculateTheTipAmount() {
+            var billAmount = document.getElementById("billAmount").value;
+            var serviceQuality = document.getElementById("serviceQuality").value;
+            var numberOfPeopleOnTheBill = document.getElementById(
+                "numberOfPeopleOnTheBill"
+            ).value;
 
-        const userInput = document.querySelector(".userInput");
-        const button = document.querySelector("button.description");
-        const p = document.querySelector("p.description");
-        let listItem = document.querySelectorAll("li");
+            if (billAmount === "" || serviceQuality == 0) {
+                alert("Please enter values");
+                return;
+            }
 
-        const addItemInput = document.querySelector(".addItemInput");
-        const addItemButton = document.querySelector("button.addItemButton");
-
-        const removeItemButton = document.querySelector(
-            "button.removeItemButton"
-        );
-
-        const listItems = document.getElementsByTagName("li");
-
-        toggleButton.addEventListener("click", () => {
-            if (listDiv.style.display == "none") {
-                listDiv.style.display = "block";
-                toggleButton.textContent = "Hide list";
+            if (numberOfPeopleOnTheBill === "" || numberOfPeopleOnTheBill <= 1) {
+                numberOfPeopleOnTheBill = 1;
+                document.getElementById("each").style.display = "none";
             } else {
-                listDiv.style.display = "none";
-                toggleButton.textContent = "Show list";
+                document.getElementById("each").style.display = "block";
             }
-        });
 
-        button.addEventListener("click", () => {
-            lastPickedColor = userInput.value;
-            listItem = document.querySelectorAll("li");
-            for (let i = 0; i < listItem.length; i++) {
-                listItem[i].style.color = lastPickedColor;
-            }
-            p.innerHTML = "The list colour is: " + userInput.value;
-        });
+            var total = (billAmount * serviceQuality) / numberOfPeopleOnTheBill;
 
-        addItemButton.addEventListener("click", () => {
-            let list = document.querySelector("ul");
-            let li = document.createElement("li");
-            li.textContent = addItemInput.value;
-            let appendedItem = list.appendChild(li);
-            li.style.color = lastPickedColor;
-            for (let i = 0; i < appendedItem.length; i++) {
-                appendedItem[i].style.color = lastPickedColor;
-            }
-            addItemInput.value = "";
-        });
+            total = Math.round(total * 100) / 100;
 
-        removeItemButton.addEventListener("click", () => {
-            let list = document.querySelector("ul");
-            let li = document.querySelector("li:last-child");
-            list.removeChild(li);
-        });
+            total = total.toFixed(2);
 
-        listDiv.addEventListener("mouseover", (event) => {
-            if (event.target.tagName == "LI") {
-                event.target.style.textTransform = "uppercase";
-            }
-        });
+            document.getElementById("totalTip").style.display = "block";
+            document.getElementById("tip").innerHTML = total;
+        }
 
-        listDiv.addEventListener("mouseout", (event) => {
-            if (event.target.tagName == "LI") {
-                event.target.style.textTransform = "lowercase";
-            }
-        });
+        document.getElementById("totalTip").style.display = "none";
+        document.getElementById("each").style.display = "none";
+
+        document.getElementById("calculate").onclick = function () {
+            calculateTheTipAmount();
+        };
     </script>
 </head>
 
 <body>
-    <h1 id="myHeading"> Shopping Cart </h1>
-    <p class="intro">Your <span class="intro__span">personal</span> shopping cart.</p>
-    <button id="toggleList" class="togglebutton">Hide cart</button>
-    <div class="list">
-        <p class="description">Type a <span>colour<span> to change cart colour</p>
-        <input type="text" class="userInput">
-        <button class="description"> Change List color</button>
-        <ul>
-            <li>Donair</li>
-            <li>Water</li>
-            <li>Chips</li>
-            <li>Soupr</li>
-        </ul>
-        <input type="text" class="addItemInput">
-        <button class="addItemButton"> Add Item </button>
-        <button class="removeItemButton"> Remove Last item </button>
+    <div id="container">
+        <h1>Tip Calculator</h1>
+        <div id="calculator">
+            <form>
+                <p>How much was your bill?</p>
+                <p>
+                    $ <input id="billAmount" type="text" placeholder="Bill Amount" />
+                </p>
+
+                <p>How was this service?</p>
+                <p>
+                    <select id="serviceQuality">
+                        <option disabled selected value="0">
+                            -- Choose an Option --
+                        </option>
+                        <option value="0.2">Good</option>
+                        <option value="0.15">It was OK</option>
+                        <option value="0.05">Terrible</option>
+                    </select>
+                </p>
+            </form>
+
+            <p>Number of people sharing the bill?</p>
+            <input id="numberOfPeopleOnTheBill" type="text" placeholder="1" />
+            people
+            <button type="button" id="calculate">Calculate Tip</button>
+        </div>
+        <div id="totalTip">
+            <sup>$</sup><span id="tip">0.00</span>
+            <small id="each">each</small>
+        </div>
     </div>
 </body>
 
-</html
+</html>
